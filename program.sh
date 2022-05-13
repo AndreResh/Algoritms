@@ -1,0 +1,4 @@
+func(){
+  echo alias
+}
+func
