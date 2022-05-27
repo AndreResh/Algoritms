@@ -1,26 +1,32 @@
 package alg.algorithm;
 
+import java.util.*;
+
 public class TwelveDay {
     public static void main(String[] args) {
-//        System.out.println(new ElevenDay().climbStairs(44));
+        System.out.println(new TwelveDay().climbStairs(44));
     }
-    static int count;
+    Map<Integer, Integer> map = new HashMap<>();
     public int climbStairs(int n) {
-        count = 0;
-        climb(0, n);
-        return count;
+        map.put(n-1, 1);
+        map.put(n-2, 2);
+        map.put(n+1, 0);
+        int current = n-3;
+        while (current>-1){
+            current = climb(current);
+            current--;
+        }
+        return map.get(0);
     }
 
-    private void climb(int number, int n) {
-        if (number == n) {
-            count++;
-            return;
-        } else if (number > n) {
-            return;
-        } else {
-            climb(number+1, n);
-            climb(number+2,n);
+    private int climb( int current) {
+        if(map.containsKey(current)){
+            return map.get(current);
         }
+        int a = climb(current+1);
+        int b = climb( current+2);
+        map.put(current, a+b);
+        return current;
     }
 //    public int rob(int[] nums) {
 //        int sum = 0;
@@ -31,4 +37,26 @@ public class TwelveDay {
 //        }
 //        return Math.max(max1, max2);
 //    }
+
+
+    public int minimumTotal(List<List<Integer>> triangle) {
+        List<List<Integer>> listList = new ArrayList<>();
+        for (int i = triangle.size()-1; i >=0 ; i--) {
+            List<Integer> nums = new ArrayList<>();
+            if (i==triangle.size()-1){
+                for (int j = 0; j < triangle.get(i).size(); j++) {
+                    nums.add(triangle.get(i).get(j));
+                }
+            } else {
+                for (int j = 0; j < triangle.get(i).size(); j++) {
+                    nums.add(Math.min(listList.get(listList.size()-1).get(j), listList.get(listList.size()-1).get(j+1))+triangle.get(i).get(j));
+                }
+            }
+
+            listList.add(nums);
+        }
+       return listList.get(listList.size()-1).get(0);
+
+    }
+
 }

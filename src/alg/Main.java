@@ -3,7 +3,6 @@ package alg;
 import alg.domains.ListNode;
 import alg.domains.TreeNode;
 
-import java.lang.reflect.Array;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -41,6 +40,7 @@ public class Main {
 //        long f = (long) (Math.pow(2, ((a-1)/2))+ Math.pow(2, ((a-3)/2)));//   2**((n-1)/2)+2**((n-2)/2)
 //        System.out.println(fib(a));
 //        System.out.println(new Main().canCompleteCircuit(new int[]{1, 2, 3, 4, 5}, new int[]{3, 4, 5, 1, 2}));
+        System.out.println(new Main().generateParenthesis(6));
 
     }
 //6
@@ -527,7 +527,7 @@ public class Main {
 
     private void getStrings(TreeNode root, String s) {
         if (root != null) {
-            if(s.length()>0) {
+            if (s.length() > 0) {
                 s += "->" + root.val;
             } else {
                 s = String.valueOf(root.val);
@@ -541,6 +541,280 @@ public class Main {
 
         }
     }
+
+    public String longestCommonPrefix(String[] strs) {
+        String current = strs[0];
+        for (int i = 1; i < strs.length; i++) {
+            StringBuilder builder = new StringBuilder();
+            for (int j = 0; j < strs[i].length(); j++) {
+                if (current.charAt(i) == strs[i].charAt(i)) {
+                    builder.append(current.charAt(i));
+                } else {
+                    break;
+                }
+            }
+            if (builder.length() > 0) {
+                current = builder.toString();
+            } else {
+                return "";
+            }
+        }
+        return current;
+    }
+
+    List<String> strings;
+
+    public List<String> generateParenthesis(int n) {
+        strings = new ArrayList<>();
+        generateString("(", n - 1, n);
+        return strings;
+    }
+
+    private void generateString(String s, int countOpen, int countClose) {
+        if (countOpen == 0 && countClose == 1) {
+            s += ')';
+            strings.add(s);
+            return;
+        }
+        String s1 = s + '(';
+        String s2 = s + ')';
+        if (countOpen != countClose) {
+            generateString(s2, countOpen, countClose - 1);
+        }
+        if (countOpen > 0) {
+            generateString(s1, countOpen - 1, countClose);
+        }
+    }
+
+    private TreeNode main;
+
+    public final TreeNode getTargetCopy(final TreeNode original, final TreeNode cloned, final TreeNode target) {
+        inOrderCopy(original, cloned, target);
+        return main;
+
+    }
+
+    private void inOrderCopy(final TreeNode original, final TreeNode cloned, final TreeNode target) {
+        if (original != null && cloned != null) {
+            if (cloned.val == original.val && original.val == target.val) {
+                main = cloned;
+                return;
+            }
+            ;
+            inOrderCopy(original.left, cloned.left, target);
+            inOrderCopy(original.right, cloned.right, target);
+        }
+    }
+
+    public List<String> letterCombinations(String digits) {
+        if (digits.length() == 0) return Collections.emptyList();
+        int ch = 0;
+        int index;
+        Map<Integer, List<Character>> map = new HashMap<>();
+        for (int i = 2; i < 10; i++) {
+            if (i == 7 || i == 9) {
+                index = 4;
+            } else {
+                index = 3;
+            }
+            List<Character> list = new ArrayList<>();
+            for (int j = 0; j < index; j++) {
+                list.add((char) ('a' + ch++));
+            }
+            map.put(i, list);
+        }
+        System.out.println(map);
+        List<String> stringList = new ArrayList<>();
+        getAllCombinations(map, stringList, digits, 0, new StringBuilder());
+        return stringList;
+    }
+
+    private void getAllCombinations(Map<Integer, List<Character>> map, List<String> stringList, String digits, int start, StringBuilder stringBuilder) {
+        System.out.println(stringBuilder);
+        if (start > digits.length() - 1) {
+            stringList.add(stringBuilder.toString());
+            return;
+        }
+        for (int i = start; i < map.get(Character.getNumericValue(digits.charAt(start))).size(); i++) {
+            stringBuilder.append(map.get(Character.getNumericValue(digits.charAt(start))).get(i));
+            getAllCombinations(map, stringList, digits, start + 1, stringBuilder);
+            stringBuilder.deleteCharAt(stringBuilder.length() - 1);
+        }
+    }
+
+
+    public List<List<Integer>> combinationSum(int[] candidates, int target) {
+        List<List<Integer>> listList = new ArrayList<>();
+        getAllCombinationsSum(listList, candidates, new ArrayList<>(), target, 0, 0);
+        return listList;
+    }
+
+    private void getAllCombinationsSum(List<List<Integer>> listList, int[] candidates, List<Integer> list, int target, int start, int sum) {
+        if (sum == target) {
+            for (int i = 1; i < list.size(); i++) {
+                if (list.get(i) < list.get(i - 1)) {
+                    return;
+                }
+            }
+            listList.add(new ArrayList<>(list));
+            return;
+        } else if (sum > target) {
+            return;
+        }
+        if (list.size() > 0) {
+            start = list.get(list.size() - 1);
+        }
+        for (int j = start; j < candidates.length; j++) {
+            if (list.size() > 0 && candidates[j] < list.get(list.size() - 1)) {
+                list.remove(list.size() - 1);
+                return;
+            }
+            list.add(candidates[j]);
+            sum += candidates[j];
+            getAllCombinationsSum(listList, candidates, list, target, start, sum);
+            list.remove(list.size() - 1);
+            sum -= candidates[j];
+        }
+    }
+
+    List<List<Integer>> listList;
+
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        listList = new ArrayList<>();
+        getAllPermute(nums, 0);
+        return listList;
+    }
+
+    private void getAllPermute(int[] nums, int start) {
+        if (start == nums.length) {
+            listList.add(toList(nums));
+            return;
+        }
+        for (int i = start; i < nums.length; i++) {
+            swap(nums, i, start);
+            getAllPermute(nums, start + 1);
+            swap(nums, i, start);
+        }
+
+    }
+
+    private List<Integer> toList(int[] nums) {
+        List<Integer> list = new ArrayList<>();
+        for (int i = 0; i < nums.length; i++) {
+            list.add(nums[i]);
+        }
+        return list;
+    }
+
+    private void swap(int[] nums, int i, int j) {
+        int a = nums[i];
+        nums[i] = nums[j];
+        nums[j] = a;
+    }
+
+    public TreeNode sortedArrayToBST(int[] nums) {
+        return createTree(nums, 0, nums.length - 1);
+    }
+
+    private TreeNode createTree(int[] nums, int left, int right) {
+        if (left > right) {
+            return null;
+        }
+        int middle = (left + right) / 2;
+        TreeNode node = new TreeNode(nums[middle]);
+        node.left = createTree(nums, left, middle - 1);
+        node.right = createTree(nums, middle + 1, right);
+        return node;
+    }
+
+    boolean norm;
+
+    public boolean isBalanced(TreeNode root) {
+        if (root == null) return true;
+        norm = true;
+        int a = isBal(root.left);
+        int b = isBal(root.right);
+        return norm && (a == b || a + 1 == b || a - 1 == b);
+    }
+
+    private int isBal(TreeNode node) {
+        if (node == null) {
+            return 1;
+        }
+        int a = isBal(node.left);
+        int b = isBal(node.right);
+        if (!(a == b || a - 1 == b || a + 1 == b)) {
+            norm = false;
+            return -1;
+        }
+        return Math.max(a, b) + 1;
+    }
+
+    public int minDepth(TreeNode root) {
+        if (root == null) return 0;
+        if (root.left == null && root.right == null) return 1;
+        if (root.left == null) return minDepth(root.right) + 1;
+        if (root.right == null) return minDepth(root.left) + 1;
+        return Math.min(minDepth(root.left) + 1, minDepth(root.right) + 1);
+    }
+
+
+    Map<Integer, String> mapOfRomans1 = Map.of(1, "I", 5, "V", 10, "X", 50, "L", 100, "C", 500, "D", 1000, "M",
+            4, "IV", 9, "IX", 40, "XL");
+    Map<Integer, String> mapOfRomans2 = Map.of(90, "XC", 400, "CD", 900, "CM");
+    static int num;
+
+    public String intToRoman(int num) {
+        this.num = num;
+        String s = "";
+        while (this.num != 0) {
+            if (num % 1000 > 0) {
+                s = getNewString(s, 1000);
+            } else if (num % 900 > 0) {
+                s = getNewString(s, 900);
+            } else if (num % 500 > 0) {
+                s = getNewString(s, 500);
+            } else if (num % 400 > 0) {
+                s = getNewString(s, 400);
+            } else if (num % 100 > 0) {
+                s = getNewString(s, 100);
+            } else if (num % 90 > 0) {
+                s = getNewString(s, 90);
+            } else if (num % 50 > 0) {
+                s = getNewString(s, 50);
+            } else if (num % 40 > 0) {
+                s = getNewString(s, 40);
+            } else if (num % 10 > 0) {
+                s = getNewString(s, 10);
+            } else if (num % 9 > 0) {
+                s = getNewString(s, 9);
+            }else if (num % 5 > 0) {
+                s = getNewString(s, 5);
+            }else if (num % 4 > 0) {
+                s = getNewString(s, 4);
+            }else {
+                s = getNewString(s, 1);
+            }
+        }
+        return s;
+    }
+
+    public String getNewString(String s, int current) {
+        if (num % current > 0) {
+            int a = num / current;
+            for (int i = 0; i < a; i++) {
+                if (mapOfRomans1.containsKey(current)) {
+                    s += mapOfRomans1.get(current);
+                } else {
+                    s += mapOfRomans2.get(current);
+                }
+
+            }
+            num -= a * current;
+        }
+        return s;
+    }
 }
+
 
 
