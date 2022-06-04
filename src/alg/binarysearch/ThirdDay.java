@@ -30,36 +30,18 @@ public class ThirdDay {
     }
 
     public int findTheDistanceValue(int[] arr1, int[] arr2, int d) {
-        Arrays.sort(arr2);
-        int count = 0;
+        int distance = 0;
         for (int i = 0; i < arr1.length; i++) {
-            int a = binarySearchNearest(arr2, arr1[i]);
-            System.out.println(arr1[i] - a);
-            if (Math.abs(arr1[i] - arr2[a]) > d) {
-                count++;
-                if(a+1<=arr2.length-1 && Math.abs(arr1[i] - arr2[a+1]) <= d){
-                    count--;
+            boolean isNormal = true;
+            for (int j = 0; j < arr2.length; j++) {
+                if(Math.abs(arr1[i]-arr2[j])<=d){
+                    isNormal = false;
+                    break;
                 }
             }
+            if(isNormal) distance++;
         }
-        return count;
+        return distance;
     }
 
-    private int binarySearchNearest(int[] arr2, int value) {
-        int left = 0;
-        int right = arr2.length - 1;
-        int middle;
-        while (left < right) {
-            middle = (left + right) / 2;
-            if (arr2[middle] == value) {
-                return value;
-            } else if (arr2[middle] > value) {
-
-                right = middle - 1;
-            } else {
-                left = middle + 1;
-            }
-        }
-        return left;
-    }
 }

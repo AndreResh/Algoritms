@@ -24,4 +24,18 @@ public class SixDay {
         }
         return count;
     }
+    public int findKthPositive(int[] arr, int k) {
+        List<Integer> list = new ArrayList<>();
+        int z = 0;
+        int i = 1;
+        while (true){
+            if(z<arr.length && arr[z]==i){
+                z++;
+            } else {
+                list.add(i);
+            }
+            i++;
+            if(list.size()==k) return list.get(list.size()-1);
+        }
+    }
 }
