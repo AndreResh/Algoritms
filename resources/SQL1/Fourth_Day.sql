@@ -6,7 +6,7 @@
 UNION
 (select s2.employee_id
  from Employees e2
-          right join Salaries s2 on e2.employee_id = s2.employee_id
+          column join Salaries s2 on e2.employee_id = s2.employee_id
  where e2.name is null)
 order by employee_id;
 

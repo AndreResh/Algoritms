@@ -94,31 +94,31 @@ public class EightDay {
 //    }
 
 //    116. Populating Next Right Pointers in Eac
-    public Node connect(Node root) {
-        setNextAttr(root, null);
+//    public Node connect(Node root) {
+//        setNextAttr(root, null);
+//
+//        return root;
+//    }
 
-        return root;
-    }
-
-    private void setNextAttr(Node root, Node rightNode){
-        if(root == null){
-            return;
-        }
-
-        // Set the right node
-        root.next = rightNode;
-
-        // Calculate the right node for the right child
-        Node temp = null;
-        if(root.next != null){
-            temp = root.next.left;
-        }
-
-        // Set next attribute for right child
-        setNextAttr(root.right, temp);
-
-        // Set next attribute for left child
-        setNextAttr(root.left, root.right);
-    }
+//    private void setNextAttr(Node root, Node rightNode){
+//        if(root == null){
+//            return;
+//        }
+//
+//        // Set the right node
+//        root.next = rightNode;
+//
+//        // Calculate the right node for the right child
+//        Node temp = null;
+//        if(root.next != null){
+//            temp = root.next.left;
+//        }
+//
+//        // Set next attribute for right child
+//        setNextAttr(root.right, temp);
+//
+//        // Set next attribute for left child
+//        setNextAttr(root.left, root.right);
+//    }
 
 }

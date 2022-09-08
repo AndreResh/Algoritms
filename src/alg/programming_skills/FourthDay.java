@@ -1,12 +1,13 @@
 package alg.programming_skills;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
+
+
+import alg.domains.Node;
+
+import java.util.*;
 
 public class FourthDay {
     public static void main(String[] args) {
-
     }
 
     public int arraySign(int[] nums) {
@@ -69,5 +70,7 @@ public class FourthDay {
         }
         return String.valueOf(chars1).equals(String.valueOf(chars2));
     }
+
+
 
 }
